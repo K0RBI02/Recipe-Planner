@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.planer;
+package de.korbi8674.recipeplanner.client.planer;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,9 +20,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
-import de.korbi8674.craftplanner.CraftPlanner;
+import de.korbi8674.recipeplanner.RecipePlanner;
 
-/** Die Liste der Dinge, die man bauen will. Wird in config/craftplanner.json gespeichert. */
+/** Die Liste der Dinge, die man bauen will. Wird in config/recipeplanner.json gespeichert. */
 public final class PlanerListe {
 	public static final class Ziel {
 		public final Item item;
@@ -38,9 +38,11 @@ public final class PlanerListe {
 	}
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-	private static final Path DATEI = FabricLoader.getInstance().getConfigDir().resolve("craftplanner.json");
-	/** Dateiname der Vorab-Version, wird beim ersten Start übernommen. */
-	private static final Path ALTE_DATEI = FabricLoader.getInstance().getConfigDir().resolve("meinemod-bauplaner.json");
+	private static final Path DATEI = FabricLoader.getInstance().getConfigDir().resolve("recipeplanner.json");
+	/** Dateinamen der Vorab-Versionen, werden beim ersten Start übernommen. */
+	private static final List<Path> ALTE_DATEIEN = List.of(
+			FabricLoader.getInstance().getConfigDir().resolve("craftplanner.json"),
+			FabricLoader.getInstance().getConfigDir().resolve("meinemod-bauplaner.json"));
 	private static List<Ziel> ziele;
 
 	private PlanerListe() {
@@ -93,13 +95,18 @@ public final class PlanerListe {
 		try (Writer writer = Files.newBufferedWriter(DATEI)) {
 			GSON.toJson(array, writer);
 		} catch (IOException e) {
-			CraftPlanner.LOGGER.error("Could not save the Craft Planner list", e);
+			RecipePlanner.LOGGER.error("Could not save the Recipe Planner list", e);
 		}
 	}
 
 	private static List<Ziel> laden() {
 		List<Ziel> liste = new ArrayList<>();
-		Path datei = Files.exists(DATEI) ? DATEI : ALTE_DATEI;
+		Path datei = DATEI;
+		for (Path alt : ALTE_DATEIEN) {
+			if (!Files.exists(datei)) {
+				datei = alt;
+			}
+		}
 		if (!Files.exists(datei)) {
 			return liste;
 		}
@@ -116,7 +123,7 @@ public final class PlanerListe {
 						obj.has("rezept") ? obj.get("rezept").getAsInt() : 0)));
 			}
 		} catch (Exception e) {
-			CraftPlanner.LOGGER.error("Could not load the Craft Planner list", e);
+			RecipePlanner.LOGGER.error("Could not load the Recipe Planner list", e);
 		}
 		return liste;
 	}

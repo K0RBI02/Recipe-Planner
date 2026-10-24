@@ -10,4 +10,4 @@ pluginManagement {
 }
 
 // Muss zur Mod-ID passen
-rootProject.name = 'craftplanner'
+rootProject.name = 'recipeplanner'

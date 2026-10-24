@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.mixin;
+package de.korbi8674.recipeplanner.client.mixin;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayEntry;
 import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 
-import de.korbi8674.craftplanner.client.planer.PlanerListe;
+import de.korbi8674.recipeplanner.client.planer.PlanerListe;
 
 /** Rechtsklick auf ein Rezept im Rezeptbuch setzt das Item auf die Bauplaner-Liste. */
 @Mixin(RecipeBookPage.class)
@@ -40,7 +40,7 @@ public abstract class RecipeBookPageMixin {
 	private Minecraft minecraft;
 
 	@Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-	private void craftplanner$rechtsklick(MouseButtonEvent event, int xo, int yo, int imageWidth, int imageHeight, boolean doubleClick,
+	private void recipeplanner$rechtsklick(MouseButtonEvent event, int xo, int yo, int imageWidth, int imageHeight, boolean doubleClick,
 			CallbackInfoReturnable<Boolean> cir) {
 		if (event.button() != InputConstants.MOUSE_BUTTON_RIGHT) {
 			return;
@@ -49,9 +49,9 @@ public abstract class RecipeBookPageMixin {
 		Item item = null;
 		if (overlay.isVisible()) {
 			// Varianten-Auswahl ist offen: die angeklickte Variante nehmen
-			for (Object knopf : ((OverlayRecipeComponentAccessor) overlay).craftplanner$recipeButtons()) {
+			for (Object knopf : ((OverlayRecipeComponentAccessor) overlay).recipeplanner$recipeButtons()) {
 				if (((AbstractWidget) knopf).isMouseOver(event.x(), event.y())) {
-					item = ergebnis(((OverlayRecipeButtonAccessor) knopf).craftplanner$recipe());
+					item = ergebnis(((OverlayRecipeButtonAccessor) knopf).recipeplanner$recipe());
 					break;
 				}
 			}

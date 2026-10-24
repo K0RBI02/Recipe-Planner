@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.mixin;
+package de.korbi8674.recipeplanner.client.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -9,5 +9,5 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 @Mixin(targets = "net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent$OverlayRecipeButton")
 public interface OverlayRecipeButtonAccessor {
 	@Accessor("recipe")
-	RecipeDisplayId craftplanner$recipe();
+	RecipeDisplayId recipeplanner$recipe();
 }

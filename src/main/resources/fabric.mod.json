@@ -1,23 +1,23 @@
 {
 	"schemaVersion": 1,
-	"id": "craftplanner",
+	"id": "recipeplanner",
 	"version": "${version}",
-	"name": "Craft Planner",
+	"name": "Recipe Planner",
 	"description": "Plan what you want to craft and see which ingredients you still need. Right-click recipes in the recipe book to add them; a small list next to your inventory shows what is missing, counting your inventory and the open chest.",
 	"authors": [
 		"KORBI8674"
 	],
 	"license": "MIT",
-	"icon": "assets/craftplanner/icon.png",
+	"icon": "assets/recipeplanner/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"de.korbi8674.craftplanner.client.CraftPlannerClient"
+			"de.korbi8674.recipeplanner.client.RecipePlannerClient"
 		]
 	},
 	"mixins": [
 		{
-			"config": "craftplanner.client.mixins.json",
+			"config": "recipeplanner.client.mixins.json",
 			"environment": "client"
 		}
 	],

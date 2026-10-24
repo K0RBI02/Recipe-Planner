@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "de.korbi8674.craftplanner.client.mixin",
+	"package": "de.korbi8674.recipeplanner.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"ContainerScreenAccessor",

@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.test;
+package de.korbi8674.recipeplanner.test;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,15 +22,15 @@ import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-import de.korbi8674.craftplanner.CraftPlanner;
-import de.korbi8674.craftplanner.client.mixin.OverlayRecipeComponentAccessor;
-import de.korbi8674.craftplanner.client.planer.Berechnung;
-import de.korbi8674.craftplanner.client.planer.PlanerListe;
-import de.korbi8674.craftplanner.client.planer.PlanerPanel;
-import de.korbi8674.craftplanner.client.planer.RezeptIndex;
-import de.korbi8674.craftplanner.test.mixin.RecipeBookComponentAccessor;
-import de.korbi8674.craftplanner.test.mixin.RecipeBookPageAccessor;
-import de.korbi8674.craftplanner.test.mixin.RecipeBookScreenAccessor;
+import de.korbi8674.recipeplanner.RecipePlanner;
+import de.korbi8674.recipeplanner.client.mixin.OverlayRecipeComponentAccessor;
+import de.korbi8674.recipeplanner.client.planer.Berechnung;
+import de.korbi8674.recipeplanner.client.planer.PlanerListe;
+import de.korbi8674.recipeplanner.client.planer.PlanerPanel;
+import de.korbi8674.recipeplanner.client.planer.RezeptIndex;
+import de.korbi8674.recipeplanner.test.mixin.RecipeBookComponentAccessor;
+import de.korbi8674.recipeplanner.test.mixin.RecipeBookPageAccessor;
+import de.korbi8674.recipeplanner.test.mixin.RecipeBookScreenAccessor;
 
 /** Spielt den Bauplaner einmal komplett durch und macht dabei Screenshots. */
 @SuppressWarnings("UnstableApiUsage")
@@ -71,7 +71,7 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			String knoepfe = context.computeOnClient(mc -> seite(mc).stream()
 					.filter(b -> b.visible).map(b -> b.getDisplayStack().getItem() + (b.isOnlyOption() ? "" : "*"))
 					.collect(Collectors.joining(", ")));
-			CraftPlanner.LOGGER.info("[TEST] Rezeptbuch-Knöpfe: {}", knoepfe);
+			RecipePlanner.LOGGER.info("[TEST] Rezeptbuch-Knöpfe: {}", knoepfe);
 
 			// 2) Rechtsklick auf Kolben im Rezeptbuch: +1, mit Shift +10 → 1 + 4×10 + 4 = 45
 			sucheImRezeptbuch(context, "piston");
@@ -94,7 +94,7 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			context.getInput().releaseShift();
 			pruefe(anzahl(context, Items.HOPPER) == 20, "Trichter sollten 20 sein");
 			context.takeScreenshot("bauplaner-2-liste");
-			CraftPlanner.LOGGER.info("[TEST] Liste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
+			RecipePlanner.LOGGER.info("[TEST] Liste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
 
 			// 4) In der Liste: Linksklick +1, Rechtsklick -1
 			klickeAufZeile(context, 0, LINKS);
@@ -150,14 +150,14 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			context.waitForScreen(ContainerScreen.class);
 			context.waitTicks(5);
 			context.takeScreenshot("bauplaner-4-kiste");
-			CraftPlanner.LOGGER.info("[TEST] Mit Kiste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
+			RecipePlanner.LOGGER.info("[TEST] Mit Kiste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
 
 			context.setScreen(() -> null);
 		}
 	}
 
 	private static void sucheImRezeptbuch(ClientGameTestContext context, String text) {
-		AbstractWidget suche = context.computeOnClient(mc -> ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).craftplannertest$component()).craftplannertest$searchBox());
+		AbstractWidget suche = context.computeOnClient(mc -> ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).recipeplannertest$component()).recipeplannertest$searchBox());
 		klickeAuf(context, suche, LINKS);
 		for (int i = 0; i < 15; i++) {
 			context.getInput().pressKey(InputConstants.KEY_BACKSPACE);
@@ -167,14 +167,14 @@ public class BauplanerClientTest implements FabricClientGameTest {
 	}
 
 	private static List<RecipeButton> seite(Minecraft mc) {
-		RecipeBookPage seite = ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).craftplannertest$component()).craftplannertest$page();
-		return ((RecipeBookPageAccessor) seite).craftplannertest$buttons();
+		RecipeBookPage seite = ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).recipeplannertest$component()).recipeplannertest$page();
+		return ((RecipeBookPageAccessor) seite).recipeplannertest$buttons();
 	}
 
 	private static List<?> overlay(Minecraft mc) {
-		RecipeBookPage seite = ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).craftplannertest$component()).craftplannertest$page();
-		var overlay = ((RecipeBookPageAccessor) seite).craftplannertest$overlay();
-		return overlay.isVisible() ? ((OverlayRecipeComponentAccessor) overlay).craftplanner$recipeButtons() : List.of();
+		RecipeBookPage seite = ((RecipeBookComponentAccessor) ((RecipeBookScreenAccessor) mc.gui.screen()).recipeplannertest$component()).recipeplannertest$page();
+		var overlay = ((RecipeBookPageAccessor) seite).recipeplannertest$overlay();
+		return overlay.isVisible() ? ((OverlayRecipeComponentAccessor) overlay).recipeplanner$recipeButtons() : List.of();
 	}
 
 	private static AbstractWidget rezeptKnopf(ClientGameTestContext context, Item... items) {

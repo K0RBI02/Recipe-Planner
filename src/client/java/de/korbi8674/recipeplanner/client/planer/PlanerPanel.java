@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.planer;
+package de.korbi8674.recipeplanner.client.planer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,9 @@ import net.minecraft.world.item.ItemStack;
 
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 
-import de.korbi8674.craftplanner.CraftPlanner;
-import de.korbi8674.craftplanner.client.mixin.ContainerScreenAccessor;
-import de.korbi8674.craftplanner.client.mixin.RecipeBookScreenAccessor;
+import de.korbi8674.recipeplanner.RecipePlanner;
+import de.korbi8674.recipeplanner.client.mixin.ContainerScreenAccessor;
+import de.korbi8674.recipeplanner.client.mixin.RecipeBookScreenAccessor;
 
 /**
  * Die schmale Bauplaner-Liste rechts neben dem Inventar: oben was man bauen will, darunter was dafür fehlt.
@@ -64,7 +64,7 @@ public final class PlanerPanel extends AbstractWidget {
 	private String letzteDiagnose = "";
 
 	private PlanerPanel(AbstractContainerScreen<?> screen, Minecraft minecraft) {
-		super(0, 0, 0, 0, Component.translatable("craftplanner.title"));
+		super(0, 0, 0, 0, Component.translatable("recipeplanner.title"));
 		this.screen = screen;
 		this.accessor = (ContainerScreenAccessor) screen;
 		this.minecraft = minecraft;
@@ -83,12 +83,12 @@ public final class PlanerPanel extends AbstractWidget {
 	// ---------------------------------------------------------------- Layout
 
 	private void layout() {
-		int fensterRechts = accessor.craftplanner$leftPos() + accessor.craftplanner$imageWidth();
-		int y = accessor.craftplanner$topPos();
+		int fensterRechts = accessor.recipeplanner$leftPos() + accessor.recipeplanner$imageWidth();
+		int y = accessor.recipeplanner$topPos();
 		int rechts = fensterRechts + 3;
 
 		// Knöpfe anderer Mods direkt neben dem Fenster (z. B. Sortieren) nicht verdecken.
-		int fensterUnten = y + accessor.craftplanner$imageHeight();
+		int fensterUnten = y + accessor.recipeplanner$imageHeight();
 		String fremdeKnoepfe = "";
 		for (GuiEventListener kind : screen.children()) {
 			if (kind != this && kind instanceof AbstractWidget w && w.visible
@@ -100,8 +100,8 @@ public final class PlanerPanel extends AbstractWidget {
 		}
 
 		// Linke Kante: das Fenster, bei offenem Rezeptbuch dessen Reiter ganz links.
-		int fensterLinks = accessor.craftplanner$leftPos();
-		if (screen instanceof AbstractRecipeBookScreen<?> && ((RecipeBookScreenAccessor) screen).craftplanner$recipeBook().isVisible()) {
+		int fensterLinks = accessor.recipeplanner$leftPos();
+		if (screen instanceof AbstractRecipeBookScreen<?> && ((RecipeBookScreenAccessor) screen).recipeplanner$recipeBook().isVisible()) {
 			fensterLinks = Math.min(fensterLinks, (screen.width - RecipeBookComponent.IMAGE_WIDTH) / 2 - 86 - 32);
 		}
 
@@ -143,7 +143,7 @@ public final class PlanerPanel extends AbstractWidget {
 				+ (fremdeKnoepfe.isEmpty() ? "" : ", fremde Knöpfe:" + fremdeKnoepfe);
 		if (!diagnose.equals(letzteDiagnose)) {
 			letzteDiagnose = diagnose;
-			CraftPlanner.LOGGER.debug("Panel layout: {}", diagnose);
+			RecipePlanner.LOGGER.debug("Panel layout: {}", diagnose);
 		}
 	}
 
@@ -197,7 +197,7 @@ public final class PlanerPanel extends AbstractWidget {
 			g.centeredText(font, "?", getX() + getWidth() / 2, getY() + getHeight() / 2 - 4, FARBE_GRAU);
 			if (isHovered()) {
 				g.setComponentTooltipForNextFrame(font, List.of(
-						Component.translatable("craftplanner.title"),
+						Component.translatable("recipeplanner.title"),
 						grau("hint.line1"),
 						grau("hint.line2"),
 						grau("hint.line3")), mouseX, mouseY);
@@ -261,7 +261,7 @@ public final class PlanerPanel extends AbstractWidget {
 			tooltip.add(stack.getHoverName());
 			tooltip.add(grau("target.amount", ziel.anzahl, Math.min(stand.vorhanden(), ziel.anzahl)));
 			if (stand.rezept() == null) {
-				tooltip.add(Component.translatable("craftplanner.target.no_recipe").withColor(FARBE_FEHLT));
+				tooltip.add(Component.translatable("recipeplanner.target.no_recipe").withColor(FARBE_FEHLT));
 			}
 			tooltip.add(grau("target.controls"));
 			tooltip.add(grau("target.controls_shift"));
@@ -290,9 +290,9 @@ public final class PlanerPanel extends AbstractWidget {
 			tooltip.add(grau("ingredient.needed", bedarf.benoetigt(), stacks(bedarf.benoetigt())));
 			tooltip.add(grau("ingredient.have", bedarf.vorhanden()));
 			if (bedarf.reicht()) {
-				tooltip.add(Component.translatable("craftplanner.ingredient.enough").withColor(FARBE_OK));
+				tooltip.add(Component.translatable("recipeplanner.ingredient.enough").withColor(FARBE_OK));
 			} else {
-				tooltip.add(Component.translatable("craftplanner.ingredient.missing", fehlt, stacks(fehlt)).withColor(FARBE_FEHLT));
+				tooltip.add(Component.translatable("recipeplanner.ingredient.missing", fehlt, stacks(fehlt)).withColor(FARBE_FEHLT));
 			}
 			if (moeglich.size() > 1) {
 				tooltip.add(grau("ingredient.any", moeglich.size()));
@@ -339,12 +339,12 @@ public final class PlanerPanel extends AbstractWidget {
 		}
 		int rest = menge % 64;
 		return rest > 0
-				? Component.translatable("craftplanner.stacks_rest", menge / 64, rest)
-				: Component.translatable("craftplanner.stacks", menge / 64);
+				? Component.translatable("recipeplanner.stacks_rest", menge / 64, rest)
+				: Component.translatable("recipeplanner.stacks", menge / 64);
 	}
 
 	private static Component grau(String schluessel, Object... werte) {
-		return Component.translatable("craftplanner." + schluessel, werte).withColor(0xFFA0A0A0);
+		return Component.translatable("recipeplanner." + schluessel, werte).withColor(0xFFA0A0A0);
 	}
 
 	// ---------------------------------------------------------------- Eingabe

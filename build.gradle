@@ -3,11 +3,11 @@ plugins {
 	id 'maven-publish'
 }
 
-// Ergibt Dateinamen wie craftplanner-1.0.0+mc26.3.jar
+// Ergibt Dateinamen wie recipeplanner-1.0.0+mc26.3.jar
 version = "${project.mod_version}+mc${project.minecraft_version}"
 
 base {
-	archivesName = "craftplanner"
+	archivesName = "recipeplanner"
 }
 
 repositories {
@@ -22,7 +22,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"craftplanner" {
+		"recipeplanner" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -91,7 +91,7 @@ publishing {
 fabricApi {
 	configureTests {
 		createSourceSet = true
-		modId = "craftplanner-test"
+		modId = "recipeplanner-test"
 		enableGameTests = false
 		enableClientGameTests = true
 		eula = true // Damit stimmst du der Minecraft-EULA zu.

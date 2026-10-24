@@ -1,0 +1,17 @@
+{
+	"recipeplanner.title": "Recipe Planner",
+	"recipeplanner.hint.line1": "Rechtsklick auf ein Rezept im Rezeptbuch",
+	"recipeplanner.hint.line2": "setzt es hier auf die Liste.",
+	"recipeplanner.hint.line3": "Shift + Rechtsklick: gleich 10 Stück",
+	"recipeplanner.target.amount": "Bauen: %s (davon %s schon da)",
+	"recipeplanner.target.no_recipe": "Kein freigeschaltetes Rezept",
+	"recipeplanner.target.controls": "Linksklick +1, Rechtsklick −1",
+	"recipeplanner.target.controls_shift": "Mit Shift: ±10",
+	"recipeplanner.ingredient.needed": "Benötigt: %s%s",
+	"recipeplanner.ingredient.have": "Vorhanden: %s",
+	"recipeplanner.ingredient.enough": "Reicht ✔",
+	"recipeplanner.ingredient.missing": "Fehlt noch: %s%s",
+	"recipeplanner.ingredient.any": "Beliebige Sorte (%s möglich), zählt alle zusammen",
+	"recipeplanner.stacks": " (%s Stacks)",
+	"recipeplanner.stacks_rest": " (%s Stacks + %s)"
+}

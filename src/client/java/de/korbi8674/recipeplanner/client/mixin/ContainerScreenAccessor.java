@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.mixin;
+package de.korbi8674.recipeplanner.client.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -9,14 +9,14 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 @Mixin(AbstractContainerScreen.class)
 public interface ContainerScreenAccessor {
 	@Accessor("leftPos")
-	int craftplanner$leftPos();
+	int recipeplanner$leftPos();
 
 	@Accessor("topPos")
-	int craftplanner$topPos();
+	int recipeplanner$topPos();
 
 	@Accessor("imageWidth")
-	int craftplanner$imageWidth();
+	int recipeplanner$imageWidth();
 
 	@Accessor("imageHeight")
-	int craftplanner$imageHeight();
+	int recipeplanner$imageHeight();
 }

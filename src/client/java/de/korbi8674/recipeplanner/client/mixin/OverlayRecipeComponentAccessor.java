@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.mixin;
+package de.korbi8674.recipeplanner.client.mixin;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
 @Mixin(OverlayRecipeComponent.class)
 public interface OverlayRecipeComponentAccessor {
 	@Accessor("recipeButtons")
-	List<?> craftplanner$recipeButtons();
+	List<?> recipeplanner$recipeButtons();
 }

@@ -1,8 +1,8 @@
-# Craft Planner
+# Recipe Planner
 
-Stop doing math for your farms. Tell Craft Planner what you want to build, and it shows exactly which ingredients you still need.
+Stop doing math for your farms. Tell Recipe Planner what you want to build, and it shows exactly which ingredients you still need.
 
-![Craft Planner next to the crafting table](docs/screenshots/werkbank-liste.png)
+![Recipe Planner next to the crafting table](docs/screenshots/werkbank-liste.png)
 
 ## How it works
 
@@ -22,7 +22,7 @@ Stop doing math for your farms. Tell Craft Planner what you want to build, and i
 
 - **Client-side only.** Works on any server, the server does not need the mod.
 - Shows **direct ingredients** (what goes into the crafting grid). Crafting table recipes are preferred, stonecutter and furnace recipes are used if there is nothing else.
-- The list is saved in `config/craftplanner.json` and shared between all worlds.
+- The list is saved in `config/recipeplanner.json` and shared between all worlds.
 - Languages: English, German.
 
 ## Requirements

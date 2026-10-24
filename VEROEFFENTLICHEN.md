@@ -1,11 +1,11 @@
-# Craft Planner veröffentlichen – Checkliste
+# Recipe Planner veröffentlichen – Checkliste
 
-Die Mod-Datei für den Upload ist **`build/libs/craftplanner-1.0.0+mc26.3.jar`**
+Die Mod-Datei für den Upload ist **`build/libs/recipeplanner-1.0.0+mc26.3.jar`**
 (nicht die `-sources.jar`). Neu bauen mit `./gradlew build`.
 
 ## Vor dem Hochladen
 
-- [ ] In einer **frischen** CurseForge-Instanz testen: nur Fabric Loader + Fabric API + Craft Planner
+- [ ] In einer **frischen** CurseForge-Instanz testen: nur Fabric Loader + Fabric API + Recipe Planner
 - [ ] Im Spiel auf Englisch **und** Deutsch kurz die Tooltips anschauen
 - [ ] Optional: Quellcode auf GitHub hochladen und den Link unten bei „Quellcode“ eintragen
 
@@ -13,10 +13,10 @@ Die Mod-Datei für den Upload ist **`build/libs/craftplanner-1.0.0+mc26.3.jar`**
 
 | Feld | Wert |
 |---|---|
-| Name | Craft Planner |
+| Name | Recipe Planner |
 | Kurzbeschreibung | Plan what you want to craft and see which ingredients you still need. |
 | Beschreibung | Inhalt von `README.md` (Abschnitte „How it works“ und „Details“) |
-| Icon | `src/main/resources/assets/craftplanner/icon.png` |
+| Icon | `src/main/resources/assets/recipeplanner/icon.png` |
 | Screenshots | `docs/screenshots/` |
 | Lizenz | MIT |
 | Loader | Fabric |

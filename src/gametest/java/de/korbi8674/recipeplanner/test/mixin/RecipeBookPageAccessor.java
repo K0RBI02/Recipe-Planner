@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.test.mixin;
+package de.korbi8674.recipeplanner.test.mixin;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 @Mixin(RecipeBookPage.class)
 public interface RecipeBookPageAccessor {
 	@Accessor("buttons")
-	List<RecipeButton> craftplannertest$buttons();
+	List<RecipeButton> recipeplannertest$buttons();
 
 	@Accessor("overlay")
-	OverlayRecipeComponent craftplannertest$overlay();
+	OverlayRecipeComponent recipeplannertest$overlay();
 }

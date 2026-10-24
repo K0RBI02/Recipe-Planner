@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "de.korbi8674.craftplanner.test.mixin",
+	"package": "de.korbi8674.recipeplanner.test.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"RecipeBookComponentAccessor",

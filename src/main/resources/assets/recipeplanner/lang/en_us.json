@@ -1,0 +1,17 @@
+{
+	"recipeplanner.title": "Recipe Planner",
+	"recipeplanner.hint.line1": "Right-click a recipe in the recipe book",
+	"recipeplanner.hint.line2": "to add it to this list.",
+	"recipeplanner.hint.line3": "Shift + right-click: add 10 at once",
+	"recipeplanner.target.amount": "To craft: %s (%s already done)",
+	"recipeplanner.target.no_recipe": "No unlocked recipe",
+	"recipeplanner.target.controls": "Left-click +1, right-click −1",
+	"recipeplanner.target.controls_shift": "Hold Shift: ±10",
+	"recipeplanner.ingredient.needed": "Needed: %s%s",
+	"recipeplanner.ingredient.have": "You have: %s",
+	"recipeplanner.ingredient.enough": "Enough ✔",
+	"recipeplanner.ingredient.missing": "Still missing: %s%s",
+	"recipeplanner.ingredient.any": "Any type (%s options), all count together",
+	"recipeplanner.stacks": " (%s stacks)",
+	"recipeplanner.stacks_rest": " (%s stacks + %s)"
+}

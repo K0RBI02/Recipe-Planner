@@ -1,4 +1,4 @@
-package de.korbi8674.craftplanner.client.planer;
+package de.korbi8674.recipeplanner.client.planer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
