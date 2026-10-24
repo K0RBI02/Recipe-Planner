@@ -34,16 +34,14 @@ import de.korbi8674.recipeplanner.client.mixin.RecipeBookScreenAccessor;
  * Neue Einträge kommen per Rechtsklick im Rezeptbuch dazu (siehe RecipeBookPageMixin).
  */
 public final class PlanerPanel extends AbstractWidget {
-	private static final int BREITE = 52;
-	/** Wenn es eng wird: nur Item-Slots, die Zahl steht wie die Stapelgröße auf dem Icon. */
-	private static final int BREITE_SCHMAL = 26;
+	/** Nur eine Spalte Item-Slots, die Zahl steht wie die Stapelgröße auf dem Icon. */
+	private static final int BREITE = 26;
 	private static final int RAND = 5;
 	private static final int ZEILE = 18;
 	private static final int TRENNER = 7;
 	/** Platz, den wir neben dem Fenster nach Knöpfen anderer Mods (z. B. Sortieren) absuchen. */
 	private static final int FREMDE_KNOEPFE_SUCHBEREICH = 40;
 
-	private static final int FARBE_TEXT = 0xFF404040;
 	private static final int FARBE_GRAU = 0xFF8B8B8B;
 	private static final int FARBE_OK = 0xFF207A20;
 	private static final int FARBE_FEHLT = 0xFFB02020;
@@ -105,36 +103,30 @@ public final class PlanerPanel extends AbstractWidget {
 			fensterLinks = Math.min(fensterLinks, (screen.width - RecipeBookComponent.IMAGE_WIDTH) / 2 - 86 - 32);
 		}
 
-		// Wohin? Erst normal breit, dann extra schmal: jeweils rechts neben das Fenster, sonst links daneben.
-		// Zur Not an den rechten Bildschirmrand (dann über fremden Knöpfen).
-		String platz = "kein Platz";
-		int x = rechts;
-		int breite = BREITE;
-		for (int b : new int[] {BREITE, BREITE_SCHMAL}) {
-			if (rechts + b <= screen.width - 1) {
-				x = rechts;
-				platz = "rechts";
-			} else if (fensterLinks - 3 - b >= 1) {
-				x = fensterLinks - 3 - b;
-				platz = "links";
-			} else {
-				continue;
-			}
-			breite = b;
-			break;
-		}
-		if (platz.equals("kein Platz") && screen.width - 1 - BREITE_SCHMAL >= fensterRechts) {
-			x = screen.width - 1 - BREITE_SCHMAL;
-			breite = BREITE_SCHMAL;
+		// Wohin? Rechts neben das Fenster, sonst links daneben,
+		// zur Not an den rechten Bildschirmrand (dann über fremden Knöpfen).
+		String platz;
+		int x;
+		if (rechts + BREITE <= screen.width - 1) {
+			x = rechts;
+			platz = "rechts";
+		} else if (fensterLinks - 3 - BREITE >= 1) {
+			x = fensterLinks - 3 - BREITE;
+			platz = "links";
+		} else if (screen.width - 1 - BREITE >= fensterRechts) {
+			x = screen.width - 1 - BREITE;
 			platz = "rechter Rand";
+		} else {
+			x = rechts;
+			platz = "kein Platz";
 		}
 
-		int hoehe = Math.min(2 * RAND + Math.max(ZEILE, letzteInhaltHoehe), screen.height - y - 4);
+		// Höchstens so tief wie das Fenster selbst, darüber hinaus wird gescrollt.
+		int hoehe = Math.min(2 * RAND + Math.max(ZEILE, letzteInhaltHoehe), Math.min(fensterUnten, screen.height - 4) - y);
 		// Leer und ohne Rezeptbuch (z. B. Kiste) braucht man das Panel nicht.
 		boolean leer = PlanerListe.ziele().isEmpty();
 		visible = !platz.equals("kein Platz") && hoehe >= ZEILE + 2 * RAND && (!leer || hatRezeptbuch);
-		setRectangle(breite, hoehe, x, y);
-		platz += breite == BREITE_SCHMAL ? " (schmal)" : "";
+		setRectangle(BREITE, hoehe, x, y);
 
 		// Diagnose fürs Log, nur wenn sich etwas ändert
 		String diagnose = screen.getClass().getSimpleName() + " " + screen.width + "x" + screen.height
@@ -254,7 +246,7 @@ public final class PlanerPanel extends AbstractWidget {
 		}
 		g.fakeItem(stack, x, y + 1);
 		boolean fertig = stand.vorhanden() >= ziel.anzahl;
-		zahl(g, stack, x, y, fertig ? "✔" : Integer.toString(ziel.anzahl), fertig ? FARBE_OK : FARBE_TEXT, fertig ? "§a" : "§f");
+		zahl(g, stack, x, y, fertig ? "✔" : Integer.toString(ziel.anzahl), fertig ? "§a" : "§f");
 
 		if (hover) {
 			List<Component> tooltip = new ArrayList<>();
@@ -282,7 +274,7 @@ public final class PlanerPanel extends AbstractWidget {
 		}
 		g.fakeItem(stack, x, y + 1);
 		int fehlt = bedarf.benoetigt() - bedarf.vorhanden();
-		zahl(g, stack, x, y, bedarf.reicht() ? "✔" : Integer.toString(fehlt), bedarf.reicht() ? FARBE_OK : FARBE_FEHLT, bedarf.reicht() ? "§a" : "§c");
+		zahl(g, stack, x, y, bedarf.reicht() ? "✔" : Integer.toString(fehlt), bedarf.reicht() ? "§a" : "§c");
 
 		if (hover) {
 			List<Component> tooltip = new ArrayList<>();
@@ -301,13 +293,9 @@ public final class PlanerPanel extends AbstractWidget {
 		}
 	}
 
-	/** Zahl neben das Icon, oder im schmalen Modus wie eine Stapelgröße aufs Icon. */
-	private void zahl(GuiGraphicsExtractor g, ItemStack stack, int x, int y, String text, int farbe, String farbcode) {
-		if (getWidth() == BREITE_SCHMAL) {
-			g.itemDecorations(font, stack, x, y + 1, farbcode + text);
-		} else {
-			g.text(font, text, x + 19, y + 5, farbe, false);
-		}
+	/** Zahl wie eine Stapelgröße aufs Icon, mit Farbcode (z. B. "§c" für rot). */
+	private void zahl(GuiGraphicsExtractor g, ItemStack stack, int x, int y, String text, String farbcode) {
+		g.itemDecorations(font, stack, x, y + 1, farbcode + text);
 	}
 
 	/**

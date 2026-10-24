@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (Minecraft 26.3)
+
+- The list is now always the compact column: item icons with the number on them, like stack sizes
+- The list no longer reaches below the inventory window; long lists scroll instead
+
 ## 1.0.0 (Minecraft 26.3)
 
 First release.

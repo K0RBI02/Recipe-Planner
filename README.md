@@ -16,7 +16,8 @@ Stop doing math for your farms. Tell Recipe Planner what you want to build, and 
 - Items you already crafted are subtracted automatically.
 - In the list: **left-click +1, right-click −1**, hold Shift for ±10. At 0 the entry is removed.
 - Only recipes you have **unlocked** show up, so it works fine in survival and on servers.
-- If there is not enough room next to the window (high GUI scale, recipe book open), the list switches to a compact column with the numbers on the icons.
+- The list is a compact column of item icons with the numbers on them, like stack sizes. Long lists scroll and never reach below the window.
+- If there is no room to the right of the window, the list moves to the left side.
 
 ## Details
 

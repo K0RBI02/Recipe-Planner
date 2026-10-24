@@ -136,6 +136,21 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			});
 			context.waitTicks(5);
 
+			// 5c) Lange Liste: Panel darf nicht tiefer als das Fenster gehen, sondern scrollt
+			context.runOnClient(mc -> {
+				for (Item item : List.of(Items.FURNACE, Items.BARREL, Items.STONE_PICKAXE, Items.STONE_AXE, Items.LEVER)) {
+					PlanerListe.hinzufuegen(item, 3);
+				}
+			});
+			context.waitTicks(3);
+			context.takeScreenshot("bauplaner-6-lange-liste");
+			pruefe(context.computeOnClient(mc -> {
+				var fenster = (de.korbi8674.recipeplanner.client.mixin.ContainerScreenAccessor) mc.gui.screen();
+				PlanerPanel panel = (PlanerPanel) Screens.getWidgets(mc.gui.screen()).stream().filter(w -> w instanceof PlanerPanel).findFirst().orElseThrow();
+				return panel.visible && panel.getBottom() <= fenster.recipeplanner$topPos() + fenster.recipeplanner$imageHeight();
+			}), "Panel ist tiefer als das Fenster");
+			context.runOnClient(mc -> PlanerListe.ziele().removeIf(z -> z.item != Items.PISTON && z.item != Items.HOPPER));
+
 			// 6) Kiste mit Eisen daneben stellen und öffnen: Kisteninhalt zählt mit
 			context.setScreen(() -> null);
 			BlockPos kiste = context.computeOnClient(mc -> mc.player.blockPosition().east(2));
