@@ -1,5 +1,8 @@
 package de.korbi8674.recipeplanner.test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +11,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.fabricmc.fabric.api.client.gametest.v1.world.TestWorldSave;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -41,10 +46,26 @@ public class BauplanerClientTest implements FabricClientGameTest {
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
-		context.runOnClient(mc -> PlanerListe.ziele().clear());
+		// Sauber starten: keine Listen von früheren Testläufen, dafür eine "alte" gemeinsame Liste wie vor 1.1.0
+		Path config = FabricLoader.getInstance().getConfigDir();
+		try {
+			if (Files.exists(config.resolve("recipeplanner"))) {
+				try (var dateien = Files.walk(config.resolve("recipeplanner"))) {
+					for (Path p : dateien.sorted(java.util.Comparator.reverseOrder()).toList()) {
+						Files.delete(p);
+					}
+				}
+			}
+			Files.deleteIfExists(config.resolve("recipeplanner.json.migrated"));
+			Files.writeString(config.resolve("recipeplanner.json"), "[{\"item\":\"minecraft:lever\",\"anzahl\":7,\"rezept\":0}]");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		context.getInput().resizeWindow(1920, 1080);
 
+		TestWorldSave weltA;
 		try (TestSingleplayerContext welt = context.worldBuilder().create()) {
+			weltA = welt.getWorldSave();
 			welt.getConnection().waitForChunksRender();
 			welt.getServer().runCommand("gamemode survival @a");
 			welt.getServer().runCommand("time set day");
@@ -59,6 +80,13 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			welt.getServer().runCommand("give @a minecraft:redstone 12");
 			context.waitTicks(20);
 			context.runOnClient(mc -> mc.player.getRecipeBook().setOpen(RecipeBookType.CRAFTING, true));
+
+			// 0) Die alte gemeinsame Liste landet in der ersten Welt, die alte Datei wird weggeräumt
+			pruefe(anzahl(context, Items.LEVER) == 7, "Alte Liste wurde nicht übernommen");
+			pruefe(!Files.exists(config.resolve("recipeplanner.json")) && Files.exists(config.resolve("recipeplanner.json.migrated")),
+					"Alte Datei wurde nicht umbenannt");
+			context.runOnClient(mc -> PlanerListe.ziele().removeIf(z -> z.item == Items.LEVER));
+			context.runOnClient(mc -> PlanerListe.speichern());
 
 			// 1) Werkbank mit offenem Rezeptbuch: leeres Panel mit "?"
 			BlockPos werkbank = context.computeOnClient(mc -> mc.player.blockPosition().west(2));
@@ -157,7 +185,10 @@ public class BauplanerClientTest implements FabricClientGameTest {
 				PlanerPanel panel = (PlanerPanel) Screens.getWidgets(mc.gui.screen()).stream().filter(w -> w instanceof PlanerPanel).findFirst().orElseThrow();
 				return panel.visible && panel.getBottom() <= fenster.recipeplanner$topPos() + fenster.recipeplanner$imageHeight();
 			}), "Panel ist tiefer als das Fenster");
-			context.runOnClient(mc -> PlanerListe.ziele().removeIf(z -> z.item != Items.PISTON && z.item != Items.HOPPER));
+			context.runOnClient(mc -> {
+				PlanerListe.ziele().removeIf(z -> z.item != Items.PISTON && z.item != Items.HOPPER);
+				PlanerListe.speichern();
+			});
 
 			// 6) Kiste mit Eisen daneben stellen und öffnen: Kisteninhalt zählt mit
 			context.setScreen(() -> null);
@@ -192,6 +223,27 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			context.takeScreenshot("bauplaner-7-shulker");
 
 			context.setScreen(() -> null);
+		}
+
+		// 8) Zweite Welt: eigene, leere Liste
+		try (TestSingleplayerContext weltB = context.worldBuilder().create()) {
+			weltB.getConnection().waitForChunksRender();
+			pruefe(context.computeOnClient(mc -> PlanerListe.ziele().isEmpty()), "Zweite Welt hat nicht ihre eigene leere Liste: " + context.computeOnClient(mc -> PlanerListe.ziele().size()));
+			context.runOnClient(mc -> PlanerListe.hinzufuegen(Items.CHEST, 3));
+		}
+
+		// 9) Erste Welt wieder öffnen: ihre Liste ist unverändert da, ohne die Kiste aus Welt 2
+		try (TestSingleplayerContext welt = weltA.open()) {
+			welt.getConnection().waitForChunksRender();
+			pruefe(anzahl(context, Items.PISTON) == 45 && anzahl(context, Items.HOPPER) == 20, "Liste der ersten Welt fehlt");
+			pruefe(anzahl(context, Items.CHEST) == 0 && anzahl(context, Items.LEVER) == 0, "Liste der ersten Welt enthält fremde Einträge");
+			String dateien;
+			try (var d = Files.list(config.resolve("recipeplanner"))) {
+				dateien = d.map(p -> p.getFileName().toString()).toList().toString();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			RecipePlanner.LOGGER.info("[TEST] Pro Welt: Welt A hat {} Ziele, Dateien: {}", context.computeOnClient(mc -> PlanerListe.ziele().size()), dateien);
 		}
 	}
 

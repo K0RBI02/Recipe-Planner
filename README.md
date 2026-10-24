@@ -23,7 +23,7 @@ Stop doing math for your farms. Tell Recipe Planner what you want to build, and 
 
 - **Client-side only.** Works on any server, the server does not need the mod.
 - Shows **direct ingredients** (what goes into the crafting grid). Crafting table recipes are preferred, stonecutter and furnace recipes are used if there is nothing else.
-- The list is saved in `config/recipeplanner.json` and shared between all worlds.
+- **Every world and every server has its own list**, saved in `config/recipeplanner/`.
 - Languages: English, German.
 
 ## Requirements
