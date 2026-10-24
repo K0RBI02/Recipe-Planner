@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "de.korbi8674.craftplanner.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ContainerScreenAccessor",
+		"OverlayRecipeButtonAccessor",
+		"OverlayRecipeComponentAccessor",
+		"RecipeBookPageMixin",
+		"RecipeBookScreenAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

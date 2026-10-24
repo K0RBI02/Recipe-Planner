@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "craftplanner",
+	"version": "${version}",
+	"name": "Craft Planner",
+	"description": "Plan what you want to craft and see which ingredients you still need. Right-click recipes in the recipe book to add them; a small list next to your inventory shows what is missing, counting your inventory and the open chest.",
+	"authors": [
+		"KORBI8674"
+	],
+	"license": "MIT",
+	"icon": "assets/craftplanner/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"de.korbi8674.craftplanner.client.CraftPlannerClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "craftplanner.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

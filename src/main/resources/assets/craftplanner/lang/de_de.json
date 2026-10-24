@@ -1,0 +1,17 @@
+{
+	"craftplanner.title": "Craft Planner",
+	"craftplanner.hint.line1": "Rechtsklick auf ein Rezept im Rezeptbuch",
+	"craftplanner.hint.line2": "setzt es hier auf die Liste.",
+	"craftplanner.hint.line3": "Shift + Rechtsklick: gleich 10 Stück",
+	"craftplanner.target.amount": "Bauen: %s (davon %s schon da)",
+	"craftplanner.target.no_recipe": "Kein freigeschaltetes Rezept",
+	"craftplanner.target.controls": "Linksklick +1, Rechtsklick −1",
+	"craftplanner.target.controls_shift": "Mit Shift: ±10",
+	"craftplanner.ingredient.needed": "Benötigt: %s%s",
+	"craftplanner.ingredient.have": "Vorhanden: %s",
+	"craftplanner.ingredient.enough": "Reicht ✔",
+	"craftplanner.ingredient.missing": "Fehlt noch: %s%s",
+	"craftplanner.ingredient.any": "Beliebige Sorte (%s möglich), zählt alle zusammen",
+	"craftplanner.stacks": " (%s Stacks)",
+	"craftplanner.stacks_rest": " (%s Stacks + %s)"
+}

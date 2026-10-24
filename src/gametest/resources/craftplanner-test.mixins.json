@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "de.korbi8674.craftplanner.test.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"RecipeBookComponentAccessor",
+		"RecipeBookPageAccessor",
+		"RecipeBookScreenAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

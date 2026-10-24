@@ -1,0 +1,13 @@
+{
+	"schemaVersion": 1,
+	"id": "craftplanner-test",
+	"version": "1.0.0",
+	"name": "Meine Mod (Tests)",
+	"environment": "*",
+	"mixins": ["craftplanner-test.mixins.json"],
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"de.korbi8674.craftplanner.test.BauplanerClientTest"
+		]
+	}
+}
