@@ -12,7 +12,7 @@ Stop doing math for your farms. Tell Recipe Planner what you want to build, and 
   - **red number** = how many are still missing
   - **green ✔** = you have enough
   - hover for details, like "Still missing: 160 (2 stacks + 32)"
-- **Counts your inventory and the open chest.** Open a chest and the numbers update instantly.
+- **Counts your inventory and the open chest**, including what is inside **shulker boxes and bundles**. Open a chest and the numbers update instantly.
 - Items you already crafted are subtracted automatically.
 - In the list: **left-click +1, right-click −1**, hold Shift for ±10. At 0 the entry is removed.
 - Only recipes you have **unlocked** show up, so it works fine in survival and on servers.

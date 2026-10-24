@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.core.BlockPos;
@@ -177,8 +178,31 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			galerieBild(context, "galerie-4-kiste");
 			RecipePlanner.LOGGER.info("[TEST] Mit Kiste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
 
+			// 7) Shulkerkiste und Bündel im Inventar: ihr Inhalt zählt mit
+			context.setScreen(() -> null);
+			welt.getServer().runCommand("give @a minecraft:shulker_box[container=[{slot:0,item:{id:\"minecraft:cobblestone\",count:64}}]]");
+			welt.getServer().runCommand("give @a minecraft:bundle[bundle_contents=[{id:\"minecraft:iron_ingot\",count:16}]]");
+			context.waitTicks(10);
+			context.setScreen(() -> new InventoryScreen(Minecraft.getInstance().player));
+			context.waitForScreen(InventoryScreen.class);
+			context.waitTicks(3);
+			RecipePlanner.LOGGER.info("[TEST] Mit Shulker: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
+			pruefe(vorhanden(context, Items.COBBLESTONE) == 164, "Shulker-Inhalt nicht gezählt: " + context.computeOnClient(BauplanerClientTest::beschreibe));
+			pruefe(vorhanden(context, Items.IRON_INGOT) == 16, "Bündel-Inhalt nicht gezählt: " + context.computeOnClient(BauplanerClientTest::beschreibe));
+			context.takeScreenshot("bauplaner-7-shulker");
+
 			context.setScreen(() -> null);
 		}
+	}
+
+	/** Wie viel von einer Zutat laut Bauplaner gerade da ist. */
+	private static int vorhanden(ClientGameTestContext context, Item item) {
+		return context.computeOnClient(mc -> {
+			AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) mc.gui.screen();
+			Berechnung r = Berechnung.rechnen(PlanerListe.ziele(), RezeptIndex.ausRezeptbuch(mc), Berechnung.vorrat(screen.getMenu()));
+			return r.bedarf.stream().filter(b -> b.zutat().test(new net.minecraft.world.item.ItemStack(item)))
+					.mapToInt(Berechnung.Bedarf::vorhanden).findFirst().orElse(-1);
+		});
 	}
 
 	private static void sucheImRezeptbuch(ClientGameTestContext context, String text) {

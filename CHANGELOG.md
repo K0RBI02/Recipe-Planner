@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 (Minecraft 26.3)
+
+- Items inside shulker boxes and bundles are counted too (in your inventory and in the open chest)
+
 ## 1.0.1 (Minecraft 26.3)
 
 - The list is now always the compact column: item icons with the number on them, like stack sizes

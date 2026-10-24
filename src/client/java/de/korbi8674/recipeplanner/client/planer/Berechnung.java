@@ -5,12 +5,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.Ingredient;
 
 /** Rechnet aus, welche direkten Zutaten für die Liste gebraucht werden und was schon da ist. */
@@ -61,7 +64,10 @@ public final class Berechnung {
 		return ergebnis;
 	}
 
-	/** Alle Items aus dem eigenen Inventar und dem gerade offenen Behälter (ohne Rüstung und Ergebnis-Slot). */
+	/**
+	 * Alle Items aus dem eigenen Inventar und dem gerade offenen Behälter (ohne Rüstung und Ergebnis-Slot),
+	 * inklusive dem Inhalt von Shulkerkisten und Bündeln.
+	 */
 	public static List<ItemStack> vorrat(AbstractContainerMenu menu) {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (Slot slot : menu.slots) {
@@ -71,12 +77,28 @@ public final class Berechnung {
 			if (slot.container instanceof Inventory && slot.getContainerSlot() >= Inventory.INVENTORY_SIZE) {
 				continue; // Rüstung und Nebenhand
 			}
-			stacks.add(slot.getItem());
+			mitInhalt(slot.getItem(), stacks, 0);
 		}
 		if (!menu.getCarried().isEmpty()) {
-			stacks.add(menu.getCarried()); // Item, das man gerade mit der Maus hält
+			mitInhalt(menu.getCarried(), stacks, 0); // Item, das man gerade mit der Maus hält
 		}
 		return stacks;
+	}
+
+	/** Fügt den Stack hinzu und, falls er etwas enthält (Shulkerkiste, Bündel), auch dessen Inhalt. */
+	private static void mitInhalt(ItemStack stack, List<ItemStack> stacks, int tiefe) {
+		stacks.add(stack);
+		if (tiefe >= 2) {
+			return; // z. B. Bündel in Shulkerkiste, tiefer geht es in Vanilla nicht
+		}
+		ItemContainerContents behaelter = stack.get(DataComponents.CONTAINER);
+		if (behaelter != null) {
+			behaelter.nonEmptyItemCopyStream().forEach(inhalt -> mitInhalt(inhalt, stacks, tiefe + 1));
+		}
+		BundleContents buendel = stack.get(DataComponents.BUNDLE_CONTENTS);
+		if (buendel != null) {
+			buendel.itemCopies().forEach(inhalt -> mitInhalt(inhalt, stacks, tiefe + 1));
+		}
 	}
 
 	private static int zaehlen(List<ItemStack> vorrat, Item item) {
