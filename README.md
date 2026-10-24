@@ -2,7 +2,7 @@
 
 Stop doing math for your farms. Tell Recipe Planner what you want to build, and it shows exactly which ingredients you still need.
 
-![Recipe Planner next to the crafting table](docs/screenshots/werkbank-liste.png)
+![Recipe Planner next to the crafting table](docs/screenshots/1-werkbank.png)
 
 ## How it works
 

@@ -46,6 +46,7 @@ public class BauplanerClientTest implements FabricClientGameTest {
 		try (TestSingleplayerContext welt = context.worldBuilder().create()) {
 			welt.getConnection().waitForChunksRender();
 			welt.getServer().runCommand("gamemode survival @a");
+			welt.getServer().runCommand("time set day");
 			welt.getServer().runCommand("recipe take @a *");
 			for (String rezept : List.of("piston", "hopper", "chest", "oak_planks", "spruce_planks", "birch_planks")) {
 				welt.getServer().runCommand("recipe give @a minecraft:" + rezept);
@@ -94,6 +95,7 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			context.getInput().releaseShift();
 			pruefe(anzahl(context, Items.HOPPER) == 20, "Trichter sollten 20 sein");
 			context.takeScreenshot("bauplaner-2-liste");
+			galerieBild(context, "galerie-1-werkbank");
 			RecipePlanner.LOGGER.info("[TEST] Liste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
 
 			// 4) In der Liste: Linksklick +1, Rechtsklick -1
@@ -102,11 +104,16 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			klickeAufZeile(context, 0, RECHTS);
 			pruefe(anzahl(context, Items.PISTON) == 45, "Rechtsklick in der Liste sollte -1 geben");
 
+			// Galerie: Tooltip über dem Bruchstein (2 Ziele, Trennlinie, dann Bretter, Bruchstein)
+			zeigeAufPanel(context, 2 * 18 + 7 + 18 + 9);
+			galerieBild(context, "galerie-2-tooltip");
+
 			// 5) Bretter haben Varianten: Rechtsklick öffnet die Auswahl, Rechtsklick auf eine Variante nimmt sie
 			sucheImRezeptbuch(context, "planks");
 			klickeAuf(context, rezeptKnopf(context, Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.BIRCH_PLANKS), RECHTS);
 			pruefe(context.computeOnClient(mc -> overlay(mc).isEmpty() == false), "Varianten-Auswahl ging nicht auf");
 			context.takeScreenshot("bauplaner-3-varianten");
+			galerieBild(context, "galerie-3-varianten");
 			AbstractWidget variante = context.computeOnClient(mc -> (AbstractWidget) overlay(mc).get(0));
 			klickeAuf(context, variante, RECHTS);
 			int bretterZiele = context.computeOnClient(mc -> (int) PlanerListe.ziele().stream()
@@ -165,6 +172,9 @@ public class BauplanerClientTest implements FabricClientGameTest {
 			context.waitForScreen(ContainerScreen.class);
 			context.waitTicks(5);
 			context.takeScreenshot("bauplaner-4-kiste");
+			// Galerie: Tooltip über dem Eisen, das jetzt teilweise aus der Kiste kommt (Zeile 3 der Zutaten)
+			zeigeAufPanel(context, 2 * 18 + 7 + 2 * 18 + 9);
+			galerieBild(context, "galerie-4-kiste");
 			RecipePlanner.LOGGER.info("[TEST] Mit Kiste: {}", context.computeOnClient(BauplanerClientTest::beschreibe));
 
 			context.setScreen(() -> null);
@@ -196,6 +206,25 @@ public class BauplanerClientTest implements FabricClientGameTest {
 		return context.computeOnClient(mc -> seite(mc).stream()
 				.filter(b -> b.visible && List.of(items).contains(b.getDisplayStack().getItem()))
 				.findFirst().orElseThrow(() -> new AssertionError("Kein Rezeptknopf für " + List.of(items))));
+	}
+
+	/** Screenshot für die Mod-Seite: ohne Chat-Meldungen und Pop-ups. */
+	private static void galerieBild(ClientGameTestContext context, String name) {
+		context.runOnClient(mc -> {
+			mc.gui.hud.getChat().clearMessages(false);
+			mc.gui.toastManager().clear();
+		});
+		context.waitTicks(2);
+		context.takeScreenshot(name);
+	}
+
+	/** Maus auf eine Höhe im Panel (gemessen ab Oberkante) stellen, ohne zu klicken. */
+	private static void zeigeAufPanel(ClientGameTestContext context, int yImPanel) {
+		PlanerPanel panel = context.computeOnClient(mc -> (PlanerPanel) Screens.getWidgets(mc.gui.screen()).stream()
+				.filter(w -> w instanceof PlanerPanel).findFirst().orElseThrow());
+		double skala = context.computeOnClient(mc -> (double) mc.getWindow().getGuiScale());
+		context.getInput().setCursorPos((panel.getX() + 12) * skala, (panel.getY() + 5 + yImPanel) * skala);
+		context.waitTicks(2);
 	}
 
 	private static void klickeAufZeile(ClientGameTestContext context, int zeile, int taste) {

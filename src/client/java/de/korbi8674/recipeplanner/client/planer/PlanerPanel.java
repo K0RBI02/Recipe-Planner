@@ -325,10 +325,12 @@ public final class PlanerPanel extends AbstractWidget {
 		if (menge < 64) {
 			return Component.empty();
 		}
+		int stapel = menge / 64;
 		int rest = menge % 64;
+		String schluessel = stapel == 1 ? "recipeplanner.stack" : "recipeplanner.stacks";
 		return rest > 0
-				? Component.translatable("recipeplanner.stacks_rest", menge / 64, rest)
-				: Component.translatable("recipeplanner.stacks", menge / 64);
+				? Component.translatable(schluessel + "_rest", stapel, rest)
+				: Component.translatable(schluessel, stapel);
 	}
 
 	private static Component grau(String schluessel, Object... werte) {

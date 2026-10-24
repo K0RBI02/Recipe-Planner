@@ -12,6 +12,8 @@
 	"recipeplanner.ingredient.enough": "Reicht ✔",
 	"recipeplanner.ingredient.missing": "Fehlt noch: %s%s",
 	"recipeplanner.ingredient.any": "Beliebige Sorte (%s möglich), zählt alle zusammen",
+	"recipeplanner.stack": " (%s Stack)",
+	"recipeplanner.stack_rest": " (%s Stack + %s)",
 	"recipeplanner.stacks": " (%s Stacks)",
 	"recipeplanner.stacks_rest": " (%s Stacks + %s)"
 }

@@ -4,6 +4,7 @@
 
 - The list is now always the compact column: item icons with the number on them, like stack sizes
 - The list no longer reaches below the inventory window; long lists scroll instead
+- Tooltips say "1 stack" instead of "1 stacks"
 
 ## 1.0.0 (Minecraft 26.3)
 
