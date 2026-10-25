@@ -2,6 +2,8 @@
 
 Stop doing math for your farms. Tell Recipe Planner what you want to build, and it shows exactly which ingredients you still need.
 
+**Download:** [CurseForge](https://www.curseforge.com/minecraft/mc-mods/recipe-planner) · **Bugs & ideas:** [Issues](https://github.com/K0RBI02/Recipe-Planner/issues)
+
 ![Recipe Planner next to the crafting table](docs/screenshots/1-werkbank.png)
 
 ## How it works

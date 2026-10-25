@@ -7,6 +7,11 @@
 	"authors": [
 		"KORBI8674"
 	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/recipe-planner",
+		"sources": "https://github.com/K0RBI02/Recipe-Planner",
+		"issues": "https://github.com/K0RBI02/Recipe-Planner/issues"
+	},
 	"license": "MIT",
 	"icon": "assets/recipeplanner/icon.png",
 	"environment": "client",
